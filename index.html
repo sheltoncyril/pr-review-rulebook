@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pull Request Review Rulebook</title>
+<meta name="description" content="Culture, norms, and governance for how we review code.">
+<style>
+  :root {
+    --accent: #ee0000;
+    --dark: #151515;
+    --gray: #6a6e73;
+    --light: #f5f5f5;
+    --border: #d2d2d2;
+    --maxw: 800px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Red Hat Text", -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--dark);
+    line-height: 1.65;
+    font-size: 17px;
+  }
+  header.hero {
+    background: var(--dark);
+    color: #fff;
+    padding: 72px 24px 56px;
+    text-align: center;
+  }
+  header.hero h1 { font-size: 2.6rem; margin: 0 0 12px; line-height: 1.15; }
+  header.hero p.sub { color: #c7c7c7; font-size: 1.15rem; margin: 0 auto 8px; max-width: 640px; }
+  header.hero p.meta { color: var(--accent); font-weight: 600; margin: 16px 0 0; font-size: .95rem; letter-spacing: .04em; text-transform: uppercase; }
+  nav.toc {
+    position: sticky; top: 0; z-index: 10;
+    background: #fff; border-bottom: 3px solid var(--accent);
+    overflow-x: auto; white-space: nowrap;
+    padding: 0 16px;
+  }
+  nav.toc a {
+    display: inline-block; padding: 14px 12px;
+    color: var(--dark); text-decoration: none; font-size: .88rem; font-weight: 500;
+  }
+  nav.toc a:hover { color: var(--accent); }
+  main { max-width: var(--maxw); margin: 0 auto; padding: 24px 24px 80px; }
+  h2 {
+    font-size: 1.7rem; margin: 56px 0 16px;
+    padding-bottom: 8px; border-bottom: 3px solid var(--accent);
+    scroll-margin-top: 70px;
+  }
+  h3 { font-size: 1.2rem; margin: 32px 0 8px; }
+  p { margin: 0 0 16px; }
+  ul { padding-left: 24px; margin: 0 0 16px; }
+  li { margin-bottom: 8px; }
+  blockquote {
+    margin: 24px 0; padding: 16px 24px;
+    border-left: 4px solid var(--accent); background: var(--light);
+    font-style: italic;
+  }
+  blockquote cite { display: block; margin-top: 8px; font-style: normal; font-size: .85rem; color: var(--gray); }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0 28px; font-size: .95rem; }
+  th { background: var(--dark); color: #fff; text-align: left; padding: 10px 14px; }
+  td { border: 1px solid var(--border); padding: 10px 14px; vertical-align: top; }
+  tr:nth-child(even) td { background: var(--light); }
+  td.rule { font-weight: 700; white-space: nowrap; }
+  code { background: var(--light); padding: 2px 6px; border-radius: 3px; font-size: .88em; }
+  .card {
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 20px 24px; margin: 16px 0;
+  }
+  .card h4 { margin: 0 0 8px; font-size: 1.05rem; }
+  .card h4 span.tag {
+    display: inline-block; background: var(--accent); color: #fff;
+    font-size: .75rem; padding: 2px 10px; border-radius: 12px;
+    margin-right: 8px; vertical-align: middle; text-transform: uppercase; letter-spacing: .05em;
+  }
+  .card p { margin: 0; font-size: .95rem; color: #333; }
+  footer {
+    background: var(--light); border-top: 1px solid var(--border);
+    padding: 32px 24px; text-align: center; color: var(--gray); font-size: .85rem;
+  }
+  a { color: var(--accent); }
+  @media (max-width: 600px) {
+    header.hero h1 { font-size: 1.9rem; }
+    body { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <h1>Pull Request Review Rulebook</h1>
+  <p class="sub">Culture, norms, and governance for how we review code</p>
+  <p class="meta">v1.0 · July 2026 · Draft for team adoption</p>
+</header>
+
+<nav class="toc">
+  <a href="#philosophy">Philosophy</a>
+  <a href="#learned">What Others Do</a>
+  <a href="#rules">Hard Rules</a>
+  <a href="#roles">Roles</a>
+  <a href="#mentorship">Mentorship</a>
+  <a href="#comments">Comments</a>
+  <a href="#ship-show-ask">Ship/Show/Ask</a>
+  <a href="#escalation">Escalation</a>
+  <a href="#metrics">Metrics</a>
+  <a href="#adoption">Adoption</a>
+  <a href="#sources">Sources</a>
+</nav>
+
+<main>
+
+<h2 id="philosophy">1. Purpose and Philosophy</h2>
+<p>This document defines how our team reviews pull requests: what is required, what is expected, and what is encouraged. It is mostly a set of <strong>cultural norms</strong>, anchored by a small number of <strong>hard rules</strong> that we agree to hold each other to. Everything else is guidance — apply judgment.</p>
+
+<blockquote>
+  A reviewer should approve a change once it definitely improves the overall code health of the system, even if it isn't perfect. There is no perfect code — only better code.
+  <cite>— Google, <a href="https://google.github.io/eng-practices/review/reviewer/standard.html">The Standard of Code Review</a></cite>
+</blockquote>
+
+<p>Microsoft's research on code review (Bacchelli &amp; Bird, ICSE 2013) found that although finding defects is the stated motivation for review, the biggest actual benefits are <strong>knowledge transfer, team awareness, and better alternative solutions</strong>. We treat review as our primary mechanism for teaching, learning, and spreading context — not just a defect filter.</p>
+
+<h3>What review is for (in priority order)</h3>
+<ul>
+  <li>Keeping code health trending upward over time.</li>
+  <li>Transferring knowledge — of the codebase, the domain, and engineering technique — in both directions.</li>
+  <li>Maintaining shared awareness of what is changing and why.</li>
+  <li>Catching defects, especially design-level ones that tests won't.</li>
+</ul>
+
+<h3>What review is not for</h3>
+<ul>
+  <li>Demonstrating seniority or winning arguments.</li>
+  <li>Enforcing personal style preferences that aren't in our style guide or linters.</li>
+  <li>Blocking progress while chasing perfection.</li>
+</ul>
+
+<h2 id="learned">2. What We Learned from Others</h2>
+<p>This rulebook is not invented from scratch. Each practice below is lifted from a published, battle-tested source:</p>
+<ul>
+  <li><strong>Google:</strong> The standard of review is "does this improve code health?", not "is this perfect?". Maximum one business day to respond to a review request. Small changes (~100 lines) are the norm. Reviewers prefix minor comments with "Nit:" so authors know what's optional. A dedicated "readability" process pairs experienced reviewers with newer engineers to teach language idioms.</li>
+  <li><strong>Microsoft:</strong> No single mandated process — teams adapt to their needs — but research across teams showed the most useful review comments are about understanding and design, and that review's biggest payoff is knowledge transfer. That justifies investing senior time in review even when defect counts look low.</li>
+  <li><strong>GitLab:</strong> Publishes its code review values in a public handbook. Keeps merge requests small (~200 lines target) because small MRs are reviewed faster with fewer blocking discussions. Codifies kindness and "assume positive intent" as review values, not just process.</li>
+  <li><strong>Kubernetes (and Red Hat's own upstream world):</strong> A two-phase reviewer/approver model with OWNERS files. "Reviewer" is an earned role and an explicit rung on the contributor ladder — reviewing is how contributors grow into maintainers. Review responsibility is a promotion criterion, not a chore.</li>
+  <li><strong>Cisco/SmartBear study (2,500 reviews, 3.2M LOC):</strong> Reviewers should cover no more than 200–400 lines at a time; defect detection drops sharply beyond that, and beyond ~60–90 minutes of continuous reviewing. Faster than ~450 lines/hour, reviewers stop finding defects.</li>
+  <li><strong>Industry-wide conventions:</strong> "Conventional Comments" labels make feedback unambiguous. The "Ship/Show/Ask" model right-sizes review ceremony to the risk of the change.</li>
+</ul>
+
+<h2 id="rules">3. The Hard Rules</h2>
+<p>These are the few things we treat as <strong>non-negotiable</strong>. Everything else in this document is a norm; these are rules. If a rule is repeatedly broken, it's raised in retro — not in the PR thread.</p>
+<table>
+  <tr><th>Hard rule</th><th>Why</th></tr>
+  <tr><td class="rule">R1. First response within one business day</td><td>Every PR gets a first reviewer response (review, comment, or explicit handoff) within one business day of being marked ready. Slow review is the #1 killer of review culture (Google's speed guideline). If you can't review, say so and reassign — silence is the only unacceptable response.</td></tr>
+  <tr><td class="rule">R2. PRs target ≤ 400 changed lines</td><td>The Cisco/SmartBear study shows defect detection collapses past 400 lines. Target ~200; hard ceiling 400 (excluding generated code, lockfiles, and mechanical renames — label these clearly). Larger changes must be split or pre-agreed with the reviewer.</td></tr>
+  <tr><td class="rule">R3. No self-merge without review</td><td>Every non-trivial change is seen by at least one other person before merge. Exceptions (Ship class: typo fixes, doc corrections, reverts, config bumps) are listed in Section 7 and must still be posted for visibility.</td></tr>
+  <tr><td class="rule">R4. Blocking comments must be actionable and explained</td><td>If you block a PR, you must say what would unblock it and why it matters. "I don't like this" is not a block. Nitpicks are never blocking.</td></tr>
+  <tr><td class="rule">R5. Authors respond to every comment</td><td>Reply, fix, or push back — but never silently ignore. A comment thread is resolved by the person who opened it (or explicitly waived).</td></tr>
+  <tr><td class="rule">R6. Critique code, never people</td><td>"This function is hard to follow" — fine. "You always write confusing code" — never. One documented violation is a conversation with the lead; it is the only rule here about tone because it's the one that breaks teams.</td></tr>
+</table>
+
+<h2 id="roles">4. Roles and Responsibilities</h2>
+
+<h3>The Author</h3>
+<ul>
+  <li><strong>Self-review first.</strong> Read your own diff in the review tool before requesting review. Half of review comments can be pre-empted this way.</li>
+  <li><strong>Write the description for the reviewer, not for yourself.</strong> What changed, why, how it was tested, and anything you're unsure about. Point reviewers at the risky part.</li>
+  <li><strong>Keep it small.</strong> One logical change per PR. Stack or split larger work.</li>
+  <li><strong>Don't take it personally.</strong> Comments are about the code. Assume positive intent (GitLab value).</li>
+</ul>
+
+<h3>The Reviewer</h3>
+<ul>
+  <li><strong>Prioritize review over new work of equal urgency.</strong> A blocked teammate is more expensive than your paused task.</li>
+  <li><strong>Review design first, style last.</strong> Does this change make sense at all? Is it in the right place? Then correctness, tests, readability. Style belongs to linters.</li>
+  <li><strong>Label your comments.</strong> Use Conventional Comments prefixes (Section 6). Mark anything optional as non-blocking.</li>
+  <li><strong>Offer praise.</strong> If something is well done, say so. Review that only ever criticizes trains people to dread it.</li>
+  <li><strong>Unblock, always.</strong> Every review interaction should leave the author with a clear next action.</li>
+</ul>
+
+<h3>The Senior Engineer (additional duties)</h3>
+<p>Seniors carry extra, explicit review responsibilities — this is where culture is actually made:</p>
+<ul>
+  <li><strong>Reserved review time.</strong> Every senior blocks a recurring calendar slot (recommended: 2 × 45 min/week) for review, treated like a meeting. At least one slot per two weeks is a paired review session with a junior engineer (Section 5).</li>
+  <li><strong>Model the standard.</strong> Seniors' own PRs follow every rule here, especially size and description quality. Juniors learn review culture from what seniors do, not what this document says.</li>
+  <li><strong>Absorb escalations.</strong> Disagreements that don't resolve in two comment rounds move to a 15-minute call, and a senior/lead arbitrates if needed (Section 8).</li>
+</ul>
+
+<h3>The Junior Engineer</h3>
+<ul>
+  <li><strong>You are a reviewer too, from week one.</strong> Kubernetes treats reviewing as the path to seniority; so do we. Juniors are assigned as first reviewer on suitable PRs, with a senior as second reviewer.</li>
+  <li><strong>Questions are contributions.</strong> "question: why this approach?" from a junior is one of the most valuable comments a PR can get — if it isn't clear to you, it isn't clear.</li>
+</ul>
+
+<h2 id="mentorship">5. Review as Mentorship</h2>
+<p>Microsoft's research found knowledge transfer is the most valuable outcome of review; Google institutionalized this with its readability process. We institutionalize it three ways:</p>
+
+<div class="card">
+  <h4><span class="tag">5.1</span>Paired review sessions</h4>
+  <p>Every junior engineer has a recurring paired review session with a senior (30–45 minutes, at least fortnightly). Together they review a real, open PR — the senior narrates what they look at, in what order, and why. The junior drives the keyboard and writes the comments. This is the single highest-leverage practice in this document: it transfers the invisible skill of how to read a diff.</p>
+</div>
+
+<div class="card">
+  <h4><span class="tag">5.2</span>Junior-first reviewer assignment</h4>
+  <p>On PRs without tight deadlines, a junior is assigned as first reviewer and a senior as approver (the Kubernetes two-phase model). The junior reviews for correctness and readability; the senior reviews for design and system fit — and also reads the junior's comments, giving feedback on the review itself when useful.</p>
+</div>
+
+<div class="card">
+  <h4><span class="tag">5.3</span>Review apprenticeship ladder</h4>
+  <p>Reviewing well is an explicit growth expectation, discussed in 1:1s and growth plans. The progression: shadow reviews (paired sessions) → first reviewer with senior backstop → trusted solo reviewer for an area → approver/owner of an area. Becoming a good reviewer is promotion-relevant work, and time spent reviewing is counted as delivery, not overhead.</p>
+</div>
+
+<h2 id="comments">6. How We Write Review Comments</h2>
+<p>We use <a href="https://conventionalcomments.org/">Conventional Comments</a> labels so intent is never ambiguous:</p>
+<table>
+  <tr><th>Label</th><th>Meaning</th><th>Blocking?</th></tr>
+  <tr><td><code>praise:</code></td><td>Something done well. Be specific.</td><td>Never</td></tr>
+  <tr><td><code>nitpick:</code></td><td>Trivial, preference-based. Author may ignore.</td><td>Never</td></tr>
+  <tr><td><code>question:</code></td><td>Genuine question; you may be missing context.</td><td>Only if unanswered</td></tr>
+  <tr><td><code>suggestion:</code></td><td>A concrete proposed improvement. Say if non-blocking.</td><td>Author's call unless marked blocking</td></tr>
+  <tr><td><code>issue:</code></td><td>A problem that should be fixed. Explain the user/system impact.</td><td>Yes, unless marked non-blocking</td></tr>
+</table>
+
+<h3>Norms</h3>
+<ul>
+  <li>Write comments as suggestions or questions, not commands: "What about extracting this?" over "Extract this."</li>
+  <li>Explain why, or link to the doc/standard that does. Comments teach; commands don't.</li>
+  <li>If you have more than ~3 rounds of back-and-forth, switch to a call or pairing session, then summarize the outcome in the PR for the record.</li>
+  <li>Approve with comments when remaining items are trust-based: "LGTM once the nits are handled" keeps momentum (Google's "LGTM with comments" pattern).</li>
+</ul>
+
+<h2 id="ship-show-ask">7. Right-Sizing Review: Ship / Show / Ask</h2>
+<p>Not every change deserves the same ceremony (<a href="https://martinfowler.com/articles/ship-show-ask.html">Martin Fowler's Ship/Show/Ask model</a>). We classify every change:</p>
+<ul>
+  <li><strong>Ship</strong> (merge, notify): typo/doc fixes, dependency bumps passing CI, reverts of broken changes, generated code refresh. Post the PR link in the team channel for visibility; no review wait required.</li>
+  <li><strong>Show</strong> (merge, then review): low-risk changes where feedback is welcome but shouldn't block — internal refactors with full test coverage, tooling improvements. Open the PR, merge on green CI, reviewers comment async; follow-ups are honored.</li>
+  <li><strong>Ask</strong> (review before merge — <strong>the default</strong>): anything touching behavior, APIs, data, security, or anything you're unsure about. Hard rules R1–R6 apply in full.</li>
+</ul>
+<p>When in doubt, <strong>Ask</strong>. Misclassifying a risky change as Ship/Show is a retro topic, not a punishable offense — we tune the boundaries together.</p>
+
+<h2 id="escalation">8. Disagreement and Escalation</h2>
+<p>Healthy review includes disagreement. Unhealthy review includes stalemates.</p>
+<ul>
+  <li><strong>Two-round rule:</strong> if author and reviewer have gone two rounds on the same point without converging, stop typing. Take it to a 15-minute call or pairing session.</li>
+  <li><strong>Tiebreak:</strong> if the call doesn't resolve it, the team lead (or area owner) decides. The decision is recorded in the PR. We disagree and commit.</li>
+  <li><strong>Author's benefit of the doubt:</strong> per Google's standard, when a change is a genuine improvement and the dispute is over which good approach is better, the author's choice stands.</li>
+  <li><strong>No hostage PRs:</strong> a reviewer may not hold a PR to force unrelated work ("while you're here…"). File a follow-up issue instead.</li>
+</ul>
+
+<h2 id="metrics">9. How We Know It's Working</h2>
+<p>Reviewed quarterly in retro. Metrics inform conversation; they are <strong>never individual performance measures</strong> — measuring individuals on review counts corrupts the culture this document exists to build.</p>
+<ul>
+  <li><strong>Time to first review</strong> (target: &lt; 1 business day, median a few hours).</li>
+  <li><strong>PR size distribution</strong> (target: median ≤ 200 changed lines).</li>
+  <li><strong>Review load distribution</strong> (no single person doing &gt; ~40% of reviews).</li>
+  <li><strong>Paired session cadence</strong> (every junior had at least one per fortnight).</li>
+  <li><strong>Team sentiment</strong> (quarterly pulse: "Do reviews help you grow?" "Are reviews respectful?" "Are reviews fast enough?").</li>
+</ul>
+
+<h2 id="adoption">10. Adoption Plan</h2>
+<ul>
+  <li><strong>Week 1:</strong> Team reads this document; 1-hour discussion to amend and ratify. The team owns the rulebook — it changes by PR to this page itself, reviewed like code.</li>
+  <li><strong>Week 1–2:</strong> Set up mechanics: PR template (what/why/testing/risk sections), size-label automation, review-request routing, seniors book their review slots and first paired sessions.</li>
+  <li><strong>Month 1:</strong> Run with the rules; collect friction in a running doc.</li>
+  <li><strong>Month 2 retro:</strong> Review metrics and friction, amend the rulebook, bump to v1.1.</li>
+</ul>
+
+<h2 id="sources">Sources</h2>
+<ul>
+  <li><a href="https://google.github.io/eng-practices/review/reviewer/standard.html">Google Engineering Practices — The Standard of Code Review</a></li>
+  <li><a href="https://google.github.io/eng-practices/review/reviewer/speed.html">Google Engineering Practices — Speed of Code Reviews</a></li>
+  <li><a href="https://google.github.io/eng-practices/review/developer/small-cls.html">Google Engineering Practices — Small CLs</a></li>
+  <li><a href="https://www.microsoft.com/en-us/research/publication/expectations-outcomes-and-challenges-of-modern-code-review/">Bacchelli &amp; Bird (Microsoft Research), "Expectations, Outcomes, and Challenges of Modern Code Review", ICSE 2013</a></li>
+  <li><a href="https://docs.gitlab.com/development/code_review/">GitLab — Code Review Guidelines</a></li>
+  <li><a href="https://github.com/kubernetes/community/blob/master/community-membership.md">Kubernetes — Community Membership (reviewer/approver ladder)</a></li>
+  <li><a href="https://www.kubernetes.dev/docs/guide/owners/">Kubernetes — OWNERS Files</a></li>
+  <li><a href="https://static1.smartbear.co/support/media/resources/cc/11_best_practices_for_peer_code_review_redirected.pdf">SmartBear — Best Practices for Peer Code Review (Cisco study)</a></li>
+  <li><a href="https://conventionalcomments.org/">Conventional Comments</a></li>
+  <li><a href="https://martinfowler.com/articles/ship-show-ask.html">Martin Fowler — Ship / Show / Ask</a></li>
+</ul>
+
+</main>
+
+<footer>
+  Pull Request Review Rulebook · v1.0 · July 2026 · Amend by PR, review like code.
+</footer>
+
+</body>
+</html>
