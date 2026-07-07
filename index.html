@@ -156,6 +156,7 @@
   <tr><td class="rule">R4. Blocking comments must be actionable and explained</td><td>If you block a PR, you must say what would unblock it and why it matters. "I don't like this" is not a block. Nitpicks are never blocking.</td></tr>
   <tr><td class="rule">R5. Authors respond to every comment</td><td>Reply, fix, or push back — but never silently ignore. A comment thread is resolved by the person who opened it (or explicitly waived).</td></tr>
   <tr><td class="rule">R6. Critique code, never people</td><td>"This function is hard to follow" — fine. "You always write confusing code" — never. One documented violation is a conversation with the lead; it is the only rule here about tone because it's the one that breaks teams.</td></tr>
+  <tr><td class="rule">R7. Request reviews via GitHub, not Slack</td><td>Always use GitHub's <strong>reviewer assignment</strong> to request reviews — do not rely on Slack messages, tags, or DMs. GitHub gives reviewers a trackable queue of pending reviews; Slack messages get buried and lost. A Slack heads-up is fine as a courtesy, but the GitHub assignment is the official request and what triggers R1.</td></tr>
 </table>
 
 <h2 id="roles">4. Roles and Responsibilities</h2>
@@ -165,12 +166,14 @@
   <li><strong>Self-review first.</strong> Read your own diff in the review tool before requesting review. Half of review comments can be pre-empted this way.</li>
   <li><strong>Write the description for the reviewer, not for yourself.</strong> What changed, why, how it was tested, and anything you're unsure about. Point reviewers at the risky part.</li>
   <li><strong>Keep it small.</strong> One logical change per PR. Stack or split larger work.</li>
+  <li><strong>Assign reviewers on GitHub.</strong> When your PR is ready, add reviewers using GitHub's reviewer assignment. This is how reviewers track their backlog — not Slack, not email. If you need a specific person, assign them directly; otherwise use your team's review rotation or CODEOWNERS.</li>
   <li><strong>Don't take it personally.</strong> Comments are about the code. Assume positive intent (GitLab value).</li>
 </ul>
 
 <h3>The Reviewer</h3>
 <ul>
   <li><strong>Prioritize review over new work of equal urgency.</strong> A blocked teammate is more expensive than your paused task.</li>
+  <li><strong>Use your GitHub review queue.</strong> Check your pending reviews regularly — this is where all review requests land (R7). If you can't get to a review within one business day, reassign or comment so the author isn't left waiting.</li>
   <li><strong>Review design first, style last.</strong> Does this change make sense at all? Is it in the right place? Then correctness, tests, readability. Style belongs to linters.</li>
   <li><strong>Label your comments.</strong> Use Conventional Comments prefixes (Section 6). Mark anything optional as non-blocking.</li>
   <li><strong>Offer praise.</strong> If something is well done, say so. Review that only ever criticizes trains people to dread it.</li>
@@ -233,7 +236,7 @@
 <ul>
   <li><strong>Ship</strong> (merge, notify): typo/doc fixes, dependency bumps passing CI, reverts of broken changes, generated code refresh. Post the PR link in the team channel for visibility; no review wait required.</li>
   <li><strong>Show</strong> (merge, then review): low-risk changes where feedback is welcome but shouldn't block — internal refactors with full test coverage, tooling improvements. Open the PR, merge on green CI, reviewers comment async; follow-ups are honored.</li>
-  <li><strong>Ask</strong> (review before merge — <strong>the default</strong>): anything touching behavior, APIs, data, security, or anything you're unsure about. Hard rules R1–R6 apply in full.</li>
+  <li><strong>Ask</strong> (review before merge — <strong>the default</strong>): anything touching behavior, APIs, data, security, or anything you're unsure about. Hard rules R1–R7 apply in full.</li>
 </ul>
 <p>When in doubt, <strong>Ask</strong>. Misclassifying a risky change as Ship/Show is a retro topic, not a punishable offense — we tune the boundaries together.</p>
 
